@@ -2,14 +2,12 @@ import React, { createContext, useState, useEffect } from "react";
 export const Context = createContext(null)
 export const AppContext = ({ children }) => {
     const [store, setStore] = useState({
-        apiUrl: 'http://127.0.0.1:5000',
-        access_token: null,
-        user: null,
-        JobCards: [],
+        
+       
     });
-    //estados que estoy usando temporalmente para testear los navbar al estar conectado o modo oscuro-franco
+    
+
     const [logged, setLogged] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
     const [actions] = useState({
         checkUser: async () => {
             if (sessionStorage.getItem('access_token')) {
@@ -211,176 +209,6 @@ export const AppContext = ({ children }) => {
                 console.log(error.message)
             }
         },
-        getApplications: async (id, token) => {
-            const { apiUrl } = store
-            try {
-                const response = await fetch(`${apiUrl}/api/applications/post/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                const data = await response.json()
-                return data.applications
-            } catch (error) {
-                console.log(error.message)
-                return false
-            }
-        },
-        updateJobCards: async (id, job_posting, token) => {
-            try {
-                const { apiUrl } = store
-                const response = await fetch(`${apiUrl}/api/job_postings/${id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify(job_posting),
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'content-Type': 'application/json'
-                    }
-                })
-                const datos = await response.json();
-                console.log(datos);
-                return datos
-            } catch (error) {
-                console.log(error.message);
-            }
-        },
-        acceptApplicant: async (id, token) => {
-            const { apiUrl } = store
-            try {
-                const response = await fetch(`${apiUrl}/api/applications/accept/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                const datos = await response.json();
-                return datos;
-            } catch (error) {
-                console.log(error.message)
-            }
-        },
-        rejectApplicant: async (id, token) => {
-            const { apiUrl } = store
-            try {
-                const response = await fetch(`${apiUrl}/api/applications/reject/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                const datos = await response.json();
-                return datos;
-            } catch (error) {
-                console.log(error.message)
-            }
-        },
-        getUserApplications: async (id, token) => {
-            const { apiUrl } = store;
-            try {
-                const response = await fetch(`${apiUrl}/api/applications/user/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                return data.applications;
-            } catch (error) {
-                console.log(error.message);
-                return false;
-            }
-        },
-        createAppRating: async (rating, user_id, application_id) => {
-            const { apiUrl } = store;
-            try {
-                const response = await fetch(`${apiUrl}/api/profile/rank_app`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        user_id: user_id,
-                        ranking_id: rating,
-                        application_id: application_id
-                    }),
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.access_token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                // Manejo de la respuesta del servidor
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                console.log("Ranking registrado exitosamente:", result);
-
-            } catch (error) {
-                console.log("Error al registrar el ranking:", error.message);
-            }
-        },
-        completeJobPost: async (id) => {
-            const { apiUrl } = store;
-            try {
-                const response = await fetch(`${apiUrl}/api/job_postings/complete/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.access_token}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                const data = await response.json();
-                return data;
-            }
-            catch (error) {
-                console.log("Error al completar Job:", error.message);
-            }
-        },
-        rateApplicant: async (user_id, app_id, rate) => {
-            const { apiUrl } = store;
-            try {
-                const response = await fetch(`${apiUrl}/api/profile/rank_app`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        ranking_id: rate,
-                        application_id: app_id,
-                        user_id: user_id
-                    }),
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.access_token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const data = await response.json();
-                return data;
-            }
-            catch (error) {
-                console.log("Error al calificar aplicante:", error.message);
-            }
-        },
-        rateJob: async (user_id, job_id, rate) => {
-            const { apiUrl } = store;
-            try {
-                const response = await fetch(`${apiUrl}/api/profile/rank_job`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        ranking_id: rate,
-                        job_posting_id: job_id,
-                        user_id: user_id
-                    }),
-                    headers: {
-                        'Authorization': `Bearer ${sessionStorage.access_token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const data = await response.json();
-                return data;
-            }
-            catch (error) {
-                console.log("Error al calificar trabajo:", error.message);
-            }
-        }
     })
 
     useEffect(() => {
